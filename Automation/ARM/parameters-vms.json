@@ -1,0 +1,132 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "eastus2"
+        },
+		"resourceGroupName": {
+            "value": "D07RG2"
+        },
+        "virtualMachineName0": {
+            "value": "d07v2server220"
+        },
+		"virtualMachineName1": {
+            "value": "d07v2server221"
+        },
+		"virtualMachineName2": {
+            "value": "d07v2server222"
+        },
+		"virtualMachineName3": {
+            "value": "d07v2server223"
+        },
+		"virtualMachineName4": {
+            "value": "d07v2server224"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D2s_v3"
+        },
+		"virtualMachineImagePublisher": {
+            "value": "OpenLogic"
+        },
+		"virtualMachineImageOffer": {
+            "value": "CentOS"
+        },
+		"virtualMachineImageSKU": {
+            "value": "6.10"
+        },
+		"virtualMachineImageVersion": {
+            "value": "latest"
+        },
+        "adminUsername": {
+            "value": "iekpo"
+        },
+        "virtualNetworkName": {
+            "value": "MySQLNetwork"
+        },
+        "networkInterfaceName0": {
+            "value": "d07v2server220"
+        },
+		"networkInterfaceName1": {
+            "value": "d07v2server221"
+        },
+		"networkInterfaceName2": {
+            "value": "d07v2server222"
+        },
+		"networkInterfaceName3": {
+            "value": "d07v2server223"
+        },
+		"networkInterfaceName4": {
+            "value": "d07v2server224"
+        },
+        "diskSizeGB": {
+            "value": "31"
+        },
+        "networkSecurityGroupName": {
+            "value": "MySQLSecurityGroup"
+        },
+        "adminPublicKey": {
+            "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDTYPoIwbHCRTzcR9yXaWO6BSpkWWu+Mz4hsXloYrwvVZU+JicsY5A6+vPTrfIzsIgxEIOjICl8LcfrSOGCvYmRlMcRIWtpq0HwGMg9JOkJ2zZXIh+uNtt0prrYmWFJpBMu/5u/1Hb8jUZOTdLKW2o6pm05i8249hGZNO4EDj3WDZ1A0aNtswn8tETTXfuhkO4G84S6SuD5kfEcTpSWdKHEv4Bwm+b3bIVIXfzfiDfaS63T6zSzDKcuTBMB+daEBwT4Y4fFrvA/zIJ4+GXdGAgKl2PVBwj57WxovxheHDtm/IO3OQBVWZ1HHX3xdaUGTierc0h1WGk7P00VnXiV6Lc/"
+        },
+        "diagnosticsStorageAccountName0": {
+            "value": "d07vdatabase220"
+        },
+		"diagnosticsStorageAccountName1": {
+            "value": "d07vdatabase221"
+        },
+		"diagnosticsStorageAccountName2": {
+            "value": "d07vdatabase222"
+        },
+		"diagnosticsStorageAccountName3": {
+            "value": "d07vdatabase223"
+        },
+		"diagnosticsStorageAccountName4": {
+            "value": "d07vdatabase224"
+        },
+        "diagnosticsStorageAccountType": {
+            "value": "Standard_LRS"
+        },
+        "diagnosticsStorageAccountKind": {
+            "value": "Storage"
+        },
+        "diagnosticsStorageAccountId0": {
+            "value": "Microsoft.Storage/storageAccounts/d07vdatabase220"
+        },
+		"diagnosticsStorageAccountId1": {
+            "value": "Microsoft.Storage/storageAccounts/d07vdatabase221"
+        },
+		"diagnosticsStorageAccountId2": {
+            "value": "Microsoft.Storage/storageAccounts/d07vdatabase222"
+        },
+		"diagnosticsStorageAccountId3": {
+            "value": "Microsoft.Storage/storageAccounts/d07vdatabase223"
+        },
+		"diagnosticsStorageAccountId4": {
+            "value": "Microsoft.Storage/storageAccounts/d07vdatabase224"
+        },
+        "subnetName": {
+            "value": "MySQLSubnet"
+        },
+        "publicIpAddressName0": {
+            "value": "dbserver-ip0"
+        },
+		"publicIpAddressName1": {
+            "value": "dbserver-ip1"
+        },
+		"publicIpAddressName2": {
+            "value": "dbserver-ip2"
+        },
+		"publicIpAddressName3": {
+            "value": "dbserver-ip3"
+        },
+		"publicIpAddressName4": {
+            "value": "dbserver-ip4"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        }
+    }
+}

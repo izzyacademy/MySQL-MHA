@@ -1,0 +1,694 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string"
+        },
+		"resourceGroupName": {
+            "type": "string"
+        },
+		"virtualMachineImagePublisher": {
+            "type": "string"
+        },
+		"virtualMachineImageOffer": {
+            "type": "string"
+        },
+		"virtualMachineImageSKU": {
+            "type": "string"
+        },
+		"virtualMachineImageVersion": {
+            "type": "string"
+        },
+        "virtualMachineName0": {
+            "type": "string"
+        },
+		"virtualMachineName1": {
+            "type": "string"
+        },
+		"virtualMachineName2": {
+            "type": "string"
+        },
+		"virtualMachineName3": {
+            "type": "string"
+        },
+		"virtualMachineName4": {
+            "type": "string"
+        },
+        "virtualMachineSize": {
+            "type": "string"
+        },
+        "adminUsername": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "networkInterfaceName0": {
+            "type": "string"
+        },
+		"networkInterfaceName1": {
+            "type": "string"
+        },
+		"networkInterfaceName2": {
+            "type": "string"
+        },
+		"networkInterfaceName3": {
+            "type": "string"
+        },
+		"networkInterfaceName4": {
+            "type": "string"
+        },
+        "diskSizeGB": {
+            "type": "string"
+        },
+        "networkSecurityGroupName": {
+            "type": "string"
+        },
+        "adminPublicKey": {
+            "type": "string"
+        },
+        "diagnosticsStorageAccountName0": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountName1": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountName2": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountName3": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountName4": {
+            "type": "string"
+        },
+        "diagnosticsStorageAccountId0": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountId1": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountId2": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountId3": {
+            "type": "string"
+        },
+		"diagnosticsStorageAccountId4": {
+            "type": "string"
+        },
+        "diagnosticsStorageAccountType": {
+            "type": "string"
+        },
+        "diagnosticsStorageAccountKind": {
+            "type": "string"
+        },
+        "subnetName": {
+            "type": "string"
+        },
+        "publicIpAddressName0": {
+            "type": "string"
+        },
+		"publicIpAddressName1": {
+            "type": "string"
+        },
+		"publicIpAddressName2": {
+            "type": "string"
+        },
+		"publicIpAddressName3": {
+            "type": "string"
+        },
+		"publicIpAddressName4": {
+            "type": "string"
+        },
+        "publicIpAddressType": {
+            "type": "string"
+        },
+        "publicIpAddressSku": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "vnetId": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
+    },
+    "resources": [
+        {
+            "name": "[parameters('virtualMachineName0')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName0'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName0'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName0')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": "true",
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+                                    "keyData": "[parameters('adminPublicKey')]"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[parameters('virtualMachineImagePublisher')]",
+                        "offer": "[parameters('virtualMachineImageOffer')]",
+                        "sku": "[parameters('virtualMachineImageSKU')]",
+                        "version": "[parameters('virtualMachineImageVersion')]"
+                    },
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "diskSizeGB": "[parameters('diskSizeGB')]",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName0'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('diagnosticsStorageAccountName0'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+		{
+            "name": "[parameters('virtualMachineName1')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName1'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName1'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName1')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": "true",
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+                                    "keyData": "[parameters('adminPublicKey')]"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[parameters('virtualMachineImagePublisher')]",
+                        "offer": "[parameters('virtualMachineImageOffer')]",
+                        "sku": "[parameters('virtualMachineImageSKU')]",
+                        "version": "[parameters('virtualMachineImageVersion')]"
+                    },
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "diskSizeGB": "[parameters('diskSizeGB')]",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName1'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('diagnosticsStorageAccountName1'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+		{
+            "name": "[parameters('virtualMachineName2')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName2'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName2'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName2')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": "true",
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+                                    "keyData": "[parameters('adminPublicKey')]"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[parameters('virtualMachineImagePublisher')]",
+                        "offer": "[parameters('virtualMachineImageOffer')]",
+                        "sku": "[parameters('virtualMachineImageSKU')]",
+                        "version": "[parameters('virtualMachineImageVersion')]"
+                    },
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "diskSizeGB": "[parameters('diskSizeGB')]",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName2'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('diagnosticsStorageAccountName2'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+		{
+            "name": "[parameters('virtualMachineName3')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName3'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName3'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName3')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": "true",
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+                                    "keyData": "[parameters('adminPublicKey')]"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[parameters('virtualMachineImagePublisher')]",
+                        "offer": "[parameters('virtualMachineImageOffer')]",
+                        "sku": "[parameters('virtualMachineImageSKU')]",
+                        "version": "[parameters('virtualMachineImageVersion')]"
+                    },
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "diskSizeGB": "[parameters('diskSizeGB')]",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName3'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('diagnosticsStorageAccountName3'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+		{
+            "name": "[parameters('virtualMachineName4')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName4'))]",
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('diagnosticsStorageAccountName4'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachineName4')]",
+                    "adminUsername": "[parameters('adminUsername')]",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": "true",
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "[concat('/home/', parameters('adminUsername'), '/.ssh/authorized_keys')]",
+                                    "keyData": "[parameters('adminPublicKey')]"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[parameters('virtualMachineImagePublisher')]",
+                        "offer": "[parameters('virtualMachineImageOffer')]",
+                        "sku": "[parameters('virtualMachineImageSKU')]",
+                        "version": "[parameters('virtualMachineImageVersion')]"
+                    },
+                    "osDisk": {
+                        "createOption": "fromImage",
+                        "diskSizeGB": "[parameters('diskSizeGB')]",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', parameters('networkInterfaceName4'))]"
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https://', parameters('diagnosticsStorageAccountName4'), '.blob.core.windows.net/')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "[parameters('diagnosticsStorageAccountName0')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "location": "[parameters('location')]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            }
+        },
+		{
+            "name": "[parameters('diagnosticsStorageAccountName1')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "location": "[parameters('location')]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            }
+        },
+		{
+            "name": "[parameters('diagnosticsStorageAccountName2')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "location": "[parameters('location')]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            }
+        },
+		{
+            "name": "[parameters('diagnosticsStorageAccountName3')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "location": "[parameters('location')]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            }
+        },
+		{
+            "name": "[parameters('diagnosticsStorageAccountName4')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2018-02-01",
+            "location": "[parameters('location')]",
+            "properties": {},
+            "kind": "[parameters('diagnosticsStorageAccountKind')]",
+            "sku": {
+                "name": "[parameters('diagnosticsStorageAccountType')]"
+            }
+        },
+        {
+            "name": "[parameters('networkInterfaceName0')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName0'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName0'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId(parameters('resourceGroupName'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
+            }
+        },
+		{
+            "name": "[parameters('networkInterfaceName1')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId(parameters('resourceGroupName'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
+            }
+        },
+		{
+            "name": "[parameters('networkInterfaceName2')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName2'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName2'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId(parameters('resourceGroupName'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
+            }
+        },
+		{
+            "name": "[parameters('networkInterfaceName3')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName3'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName3'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId(parameters('resourceGroupName'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
+            }
+        },
+		{
+            "name": "[parameters('networkInterfaceName4')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2018-04-01",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName4'))]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[variables('subnetRef')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic",
+                            "publicIpAddress": {
+                                "id": "[resourceId(parameters('resourceGroupName'),'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName4'))]"
+                            }
+                        }
+                    }
+                ],
+                "networkSecurityGroup": {
+                    "id": "[resourceId(parameters('resourceGroupName'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                }
+            }
+        },
+        {
+            "name": "[parameters('publicIpAddressName0')]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2017-08-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            },
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            }
+        },
+		{
+            "name": "[parameters('publicIpAddressName1')]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2017-08-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            },
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            }
+        },
+		{
+            "name": "[parameters('publicIpAddressName2')]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2017-08-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            },
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            }
+        },
+		{
+            "name": "[parameters('publicIpAddressName3')]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2017-08-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            },
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            }
+        },
+		{
+            "name": "[parameters('publicIpAddressName4')]",
+            "type": "Microsoft.Network/publicIpAddresses",
+            "apiVersion": "2017-08-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publicIpAllocationMethod": "[parameters('publicIpAddressType')]"
+            },
+            "sku": {
+                "name": "[parameters('publicIpAddressSku')]"
+            }
+        }
+    ],
+    "outputs": {
+        "adminUsername": {
+            "type": "string",
+            "value": "[parameters('adminUsername')]"
+        }
+    }
+}
