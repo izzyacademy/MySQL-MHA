@@ -1,0 +1,91 @@
+# The following playbook is executed against all the servers in the cluster including master candidates, slaves, mha nodes and manager manager
+# It is to be run as follows from the current directory
+# ansible-playbook setup-dependencies.yml
+---
+- hosts: mysql_servers
+  vars:
+    mha_rpm_location: "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/mysql-master-ha"
+    
+    mha_artifacts_download_location: "/tmp/mha_rpms"
+    
+    mysql_artifacts_download_location: "/tmp/mysql_rpms"
+    
+    mysql_repo_gpg_key: "http://repo.mysql.com/RPM-GPG-KEY-mysql"
+    
+    mha_rpm_artifacts:
+      - mha4mysql-node-0.54-0.el6.noarch.rpm
+   
+  remote_user: root
+  tasks:
+  - name: Updates the cache on the server
+    yum:
+      name: '*'
+      update_cache: yes
+      
+  - name: Install latest epel-release x86_64 rpm
+    yum:
+      name: https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+      state: present
+    
+  - name: Install MySQL Community Server Yum Repo RPM GPG keys
+    tags:
+      - install-mysql
+    yum:
+      name: http://repo.mysql.com/mysql-community-release-el6-5.noarch.rpm
+      state: present
+      
+  - name: Upgrade All Packages on the server
+    yum:
+      name: '*'
+      state: latest
+      
+  - name: Install MySQL
+    tags:
+      - install-mysql
+    yum:
+      name: "{{item}}"
+      state: latest
+    with_items:
+      #      - libselinux-python
+      #- perl-DBD-MySQL
+      #- perl-Parallel-ForkManager
+      #- perl-Config-Tiny
+      #- perl-Parallel-ForkManager
+      - mysql-community-server
+      - mysql-community-client
+      - MySQL-python
+      
+  - name: Setup Download Directories for Artifacts
+    file:
+      path: "/tmp/{{ item }}"
+      recurse: yes
+      group: root
+      owner: root
+      mode: '0775'
+      state: directory
+    with_items:
+      - mha_rpms
+      - mysql_rpms
+      
+  - name: "Fetch MySQL MHA Files to Nodes {{mha_rpm_location}}"
+    tags:
+      - fetch-mha
+    get_url:
+      url: "{{mha_rpm_location}}/{{ item }}"
+      dest: "{{ mha_artifacts_download_location}}/{{ item }}"
+      mode: '0775'
+      group: root
+      owner: root
+    with_items:
+      - "{{ mha_rpm_artifacts }}"
+
+  - name: Install MHA
+    tags:
+      - install-mha
+    yum:
+      name: "{{item}}"
+      state: latest
+    with_items:
+      - "{{ mha_artifacts_download_location}}/mha4mysql-node-0.54-0.el6.noarch.rpm"
+      
+     

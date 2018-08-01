@@ -1,0 +1,46 @@
+- name: Create Azure MySQL VMs
+  hosts: localhost
+  vars:
+    vm_names:
+      - master1
+      - master2
+      - slave1
+      - slave2
+  connection: local
+  tasks:
+  - name: Create public IP address
+    azure_rm_publicipaddress:
+      resource_group: ps-mha-rg
+      allocation_method: Static
+      name: "ps-mha-{{item}}-pip"
+    with_items:
+      - "{{ vm_names }}"
+  - name: Create virtual network inteface card
+    azure_rm_networkinterface:
+      resource_group: ps-mha-rg
+      name: "ps-mha-{{item}}-nic"
+      virtual_network: ps-mha-vnet
+      subnet: ps-mha-subnet
+      public_ip_name: "ps-mha-{{item}}-pip"
+      security_group: ps-mha-nsg
+    with_items:
+      - "{{ vm_names }}"
+  - name: Create VM
+    azure_rm_virtualmachine:
+      resource_group: ps-mha-rg
+      name: "ps-mha-{{item}}-vm"
+      vm_size: Standard_DS1_v2
+      admin_username: thfalgou
+      managed_disk_type: Standard_LRS
+      ssh_password_enabled: false
+      ssh_public_keys:
+        - path: /home/thfalgou/.ssh/authorized_keys
+          key_data: "<INSERT HERE>"
+      network_interfaces: "ps-mha-{{item}}-nic"
+      image:
+        offer: CentOS
+        publisher: OpenLogic
+        sku: '7.5'
+        version: latest
+    with_items:
+      - "{{ vm_names }}"
