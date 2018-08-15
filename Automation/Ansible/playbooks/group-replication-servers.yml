@@ -1,0 +1,21 @@
+# It is to be run as follows from the current directory
+# ansible-playbook mgr-cluster-members.yml
+---
+- hosts: mysql_cluster_members
+  vars:
+    
+    mha_artifacts_download_location: "/root/Ansible/Downloads/mha_rpms"
+      
+  remote_user: root
+  tasks:
+
+  - name: Install Required Library (libselinux-python) on Server
+    yum:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - mysql-server
+      - mysql-libs
+      - mysql-connector-java
+      - MySQL-python
+      - mysql-devel

@@ -1,0 +1,91 @@
+# It is to be run as follows from the current directory
+# ansible-playbook group-replication-setup-dependencies.yml
+
+# This playbook sets up the dependencies needed on all the machines in the cluster (routers and cluster members)
+---
+- hosts: mysql_machines
+  vars:
+    
+    mha_artifacts_download_location: "/root/Ansible/Downloads/mha_rpms"
+    
+    mysql_repo_gpg_key: "http://repo.mysql.com/RPM-GPG-KEY-mysql"
+      
+  remote_user: root
+  tasks:
+  - name: Updates the cache on the server
+    yum:
+      name: '*'
+      update_cache: yes
+      
+  - name: Install latest epel-release x86_64 rpm
+    yum:
+      name: https://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+      state: present
+  
+  - name: Remove the following Packages from Server
+    yum:
+      name: "{{item}}"
+      state: removed
+    with_items:
+      - java-1.7.0-openjdk
+      
+  - name: Install Required Packages on Server
+    yum:
+      name: "{{item}}"
+      state: latest
+    with_items:
+      - libselinux-python
+      - java-1.8.0-openjdk
+
+  - name: Update All Installed Packages on the server
+    yum:
+      name: '*'
+      state: latest
+      
+  - name: Install MySQL Community Server Yum Repo RPM GPG keys
+    rpm_key:
+      state: present
+      key: "{{ mysql_repo_gpg_key }}"
+      validate_certs: yes
+      
+  - name: Install MySQL 5.7 Community Server Yum Repository
+    copy:
+      src: files/mysql-community-5.7.repo
+      dest: /etc/yum.repos.d/mysql-community.repo
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Install MySQL Community Tools Yum Repository
+    copy:
+      src: files/mysql-tools-community.repo
+      dest: /etc/yum.repos.d/mysql-tools-community.repo
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: Update All Installed Packages on the server
+    yum:
+      name: '*'
+      state: latest
+      update_cache: yes
+      update_only: yes
+      
+      
+  - name: install the 'Development tools' package group
+    yum:
+      name: "@Development tools"
+      state: present
+      
+  - name: Setup Checkpoint directories that will be utilized during software installation and configuration
+    file:
+      path: "/root/Ansible/Checkpoints/{{ item }}"
+      recurse: yes
+      group: root
+      owner: root
+      mode: '0775'
+      state: directory
+    with_items:
+      - mysql_credentials
+      - mysql_group_replication_instance
+      - mysql_router

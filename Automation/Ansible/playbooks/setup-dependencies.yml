@@ -4,28 +4,16 @@
 ---
 - hosts: mysql_servers
   vars:
-    mysql_rpm_location: "https://mysqlartifacts.blob.core.windows.net/mysql-rpms"
     
     mha_rpm_location: "https://mysqlartifacts.blob.core.windows.net/mha-rpms"
     
     mha_artifacts_download_location: "/root/Ansible/Downloads/mha_rpms"
-    
-    mysql_artifacts_download_location: "/root/Ansible/Downloads/mysql_rpms"
     
     mysql_repo_gpg_key: "http://repo.mysql.com/RPM-GPG-KEY-mysql"
     
     mha_rpm_artifacts:
       - mha4mysql-manager-0.56-0.el6.noarch.rpm
       - mha4mysql-node-0.56-0.el6.noarch.rpm
-   
-    mysql_rpm_artifacts:
-      - MySQL-client-5.6.37-1.el6.x86_64.rpm
-      - MySQL-devel-5.6.37-1.el6.x86_64.rpm
-      - MySQL-embedded-5.6.37-1.el6.x86_64.rpm
-      - MySQL-server-5.6.37-1.el6.x86_64.rpm
-      - MySQL-shared-5.6.37-1.el6.x86_64.rpm
-      - MySQL-shared-compat-5.6.37-1.el6.x86_64.rpm
-      - MySQL-test-5.6.37-1.el6.x86_64.rpm
       
   remote_user: root
   tasks:

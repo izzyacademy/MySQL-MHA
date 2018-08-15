@@ -1,0 +1,56 @@
+# It is to be run as follows from the current directory
+# ansible-playbook group-replication-cluster-members.yml
+---
+- hosts: mysql_cluster_members
+  vars:
+    
+    mha_artifacts_download_location: "/root/Ansible/Downloads/mha_rpms"
+  
+  vars_prompt:
+    - name: "mysql_password"
+      prompt: "Enter the MySQL password"
+      
+  remote_user: root
+  tasks:
+
+  - name: Install Required Libraries on Server
+    yum:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - mysql-community-server
+      - mysql-community-libs
+      - mysql-community-devel
+      - mysql-connector-java
+      - MySQL-python
+      - mysql-community-client
+      
+  - name: "Ensure mysqld Service Daemon has Started"
+    service:
+      name: mysqld
+      state: started
+      enabled: yes
+      
+  - name: Copy over script files
+    copy:
+      src: "{{item.source}}"
+      dest: "{{item.destination}}"
+      owner: root
+      group: root
+      mode: '0770'
+    with_items:
+      - {source: 'files/mysql-password-extractor.sh', destination: '/root/mysql-password-extractor.sh' }
+      - {source: 'files/mysql-password-update.sh', destination: '/root/mysql-password-update.sh' }
+    
+    
+  - name: Set up the default root password configuration on this machine
+    command: /root/mysql-password-extractor.sh
+    args:
+      chdir: /root
+      creates: /root/.my.cnf
+      
+  - name: Updating administrative user password on mysql database to {{ mysql_password }}
+    command: /root/mysql-password-update.sh {{ mysql_password }}
+    args:
+      chdir: /root
+      creates: /root/create-users.sql
